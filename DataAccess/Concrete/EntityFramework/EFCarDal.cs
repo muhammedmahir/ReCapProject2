@@ -1,5 +1,7 @@
-﻿using DataAccess.Abstract;
+﻿using Core.DataAccess.EntityFramework;
+using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,56 +11,19 @@ using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EFCarDal : ICarDal
+    public class EFCarDal : EfEntityRepositoryBase<Car, CarContext>, ICarDal
     {
-        public void Add(Car entity)
-        {
-            //using bittiği anda belleği temizlemek için bu yapıyı kullanıyoruz.
-            using (CarContext context = new CarContext())
-            {
-                var addedEntity = context.Entry(entity); // referansı al
-                addedEntity.State = EntityState.Added; // atama yap
-                context.SaveChanges();//kaydet
-            }
-        }
-
-        public void Delete(Car entity)
-        {
-            //using bittiği anda belleği temizlemek için bu yapıyı kullanıyoruz.
-            using (CarContext context = new CarContext())
-            {
-                var deletedEntity = context.Entry(entity); // referansı al
-                deletedEntity.State = EntityState.Deleted; // atama yap
-                context.SaveChanges();//kaydet
-            }
-        }
-
-        public Car Get(Expression<Func<Car, bool>> filter)
+        public List<CarDetailDto> GetCarDetails()
         {
             using (CarContext context = new CarContext())
             {
-                return context.Set<Car>().SingleOrDefault(filter);
+                var result = from c in context.Cars
+                             join b in context.Brands
+                             on c.BrandId equals b.BrandId
+                             select new CarDetailDto { CarId = c.CarId ,Descriptions = c.Descriptions, BrandName=b.BrandName,DailyPrice =c.DailyPrice};
+                return result.ToList();
             }
-        }
-
-        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
-        {
-            using (CarContext context = new CarContext())
-            {
-                return filter == null ? context.Set<Car>().ToList() : context.Set<Car>().Where(filter).ToList();
-                // Car tablosunu select et ve liste olarak ver.
-            }
-        }
-
-        public void Update(Car entity)
-        {
-            //using bittiği anda belleği temizlemek için bu yapıyı kullanıyoruz.
-            using (CarContext context = new CarContext())
-            {
-                var updatedEntity = context.Entry(entity); // referansı al
-                updatedEntity.State = EntityState.Modified; // atama yap
-                context.SaveChanges();//kaydet
-            }
+            
         }
     }
 }

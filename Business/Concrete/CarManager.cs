@@ -2,11 +2,12 @@
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Business.Consrete
+namespace Business.Concrete
 {
     public class CarManager : ICarService
     {
@@ -34,6 +35,11 @@ namespace Business.Consrete
         public List<Car> GetAllByDailyPrice(decimal min, decimal max)
         {
             return _carDal.GetAll(p => p.DailyPrice > min && p.DailyPrice <= max);
+        }
+
+        public List<CarDetailDto> GetCarDetails()
+        {
+            return _carDal.GetCarDetails();
         }
     }
 }
