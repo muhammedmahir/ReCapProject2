@@ -36,9 +36,18 @@ namespace ConsoleUI
         {
             CarManager carManager = new CarManager(new EFCarDal());
 
-            foreach (var car in carManager.GetCarDetails())
+            var result = carManager.GetCarDetails();
+            if (result.Success == true)
             {
-                Console.WriteLine(car.Descriptions + " " + car.BrandName);
+
+                foreach (var car in result.Data)
+                {
+                    Console.WriteLine(car.Descriptions + " " + car.BrandName);
+                }
+            }
+            else
+            {
+                Console.WriteLine(result.Message);
             }
         }
     }
