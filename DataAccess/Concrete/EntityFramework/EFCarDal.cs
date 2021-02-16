@@ -11,7 +11,7 @@ using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EFCarDal : EfEntityRepositoryBase<Car, CarContext>, ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car, CarContext>, ICarDal
     {
         public List<CarDetailDto> GetCarDetails()
         {
@@ -20,7 +20,7 @@ namespace DataAccess.Concrete.EntityFramework
                 var result = from c in context.Cars
                              join b in context.Brands
                              on c.BrandId equals b.BrandId
-                             select new CarDetailDto { CarId = c.CarId ,Descriptions = c.Descriptions, BrandName=b.BrandName,DailyPrice =c.DailyPrice};
+                             select new CarDetailDto { Id = c.CarId ,Description = c.Descriptions, BrandName=b.BrandName,DailyPrice =c.DailyPrice};
                 return result.ToList();
             }
             

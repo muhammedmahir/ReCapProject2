@@ -2,6 +2,7 @@
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Business.Constants;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,6 +27,24 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<Color>(_colorDal.Get(p => p.ColorId==ColorId));
         }
-
+        public IResult Add(Color color)
+        {
+            if (color.ColorName.Length < 2)
+            {
+                return new ErrorResult(Messages.CarNameInvalid);
+            }
+            _colorDal.Add(color);
+            return new SuccessResult(Messages.CarAdded);
+        }
+        public IResult Update(Color color)
+        {
+            _colorDal.Update(color);
+            return new SuccessResult(Messages.CarUpdated);
+        }
+        public IResult Delete(Color color)
+        {
+            _colorDal.Delete(color);
+            return new SuccessResult(Messages.CarDeleted);
+        }
     }
 }
